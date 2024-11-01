@@ -7,4 +7,8 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.stats-card {
+  color: blue;
+}
+</style>
