@@ -1,17 +1,18 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import axiosInstance from "@/axios.js";
+import { useUserStore } from "@/stores/userStore";
 
 const userid = ref("");
 const password = ref("");
 const router = useRouter();
-const URL = "http://localhost:8080/api";
+const userStore = useUserStore();
 
 const handleLogin = async () => {
   if (userid.value && password.value) {
     try {
-      const response = await axios.post(`${URL}/auth/login`, {
+      const response = await axiosInstance.post(`/auth/login`, {
         userNumber: userid.value,
         userPassword: password.value,
       });
@@ -20,16 +21,26 @@ const handleLogin = async () => {
 
       const accessToken = response.data.accessToken;
       const refreshToken = response.data.refreshToken;
+
       console.log("accessToken: ", accessToken);
       console.log("refreshToken: ", refreshToken);
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
       const deptId = response.data.deptId;
       console.log("부서 ID: ", deptId);
+
+      const userName = response.data.userName;
+      console.log("사용자 이름: ", userName);
+
+      const userNumber = response.data.userNumber;
+      console.log("행번: ", userNumber);
+
+      userStore.setUserName(userName);
+      userStore.setUserNumber(userNumber);
 
       if (deptId === "01") {
         router.push("/dashboard");
