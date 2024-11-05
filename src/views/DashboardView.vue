@@ -22,7 +22,7 @@ function onBranchChange(selectedBranch) {
 <template>
   <div class="dashboard-container">
     <Sidebar />
-    <div class="main-content">
+    <div class="info-container">
       <div class="dropdown-container">
         <Dropdown @change="onBranchChange" />
       </div>
@@ -41,51 +41,41 @@ function onBranchChange(selectedBranch) {
         </div>
       </div>
     </div>
+    <!-- dvw width 반응형으로 작동 -->
   </div>
 </template>
 
 <style scoped>
 .dashboard-container {
   display: flex;
+  flex-direction: row;
 }
 
-.main-content {
-  flex: 1;
-  padding: 5%;
+.info-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 전체 화면 높이를 차지하게 설정 */
+  width: 100%;
 }
 
 .dropdown-container {
-  margin-bottom: 5%;
+  margin-bottom: 3rem;
   display: flex;
   align-items: center;
   gap: 2.5%;
 }
 
 .grid-layout {
+  /* width: 100%; */
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 두 개의 열 */
-  grid-template-rows: repeat(
-    2,
-    1fr
-  ); /* 두 개의 행, 각 행의 높이를 동일하게 설정 */
-  gap: 5%; /* 그리드 항목 사이의 간격 */
-  flex: 1; /* 남은 공간을 차지 */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5%;
+  flex: 1;
 }
 
 .grid-item {
   background-color: #ffffff;
   border-radius: 3%;
-  padding: 2%; /* 패딩을 줄여서 공간을 최소화 */
+  padding: 2%;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 192rem) {
-  .grid-layout {
-    grid-template-columns: 1fr; /* 한 열로 변경 */
-    grid-template-rows: auto; /* 자동 높이 */
-  }
 }
 </style>

@@ -41,6 +41,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
+import { onMounted } from "vue";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -56,11 +57,20 @@ const handleNavigation = (path, requiredDeptId) => {
 const isActive = (route) => {
   return router.currentRoute.value.path === route;
 };
+
+onMounted(() => {
+  const userName = localStorage.getItem("userName") || "";
+  const userNumber = localStorage.getItem("userNumber") || "";
+  const userDeptId = localStorage.getItem("userDeptId") || "";
+  userStore.setUserName(userName);
+  userStore.setUserNumber(userNumber);
+  userStore.setUserDeptId(userDeptId);
+});
 </script>
 
 <style scoped>
 .sidebar {
-  width: 250px;
+  width: 15dvw;
   background-color: #1a1a2e;
   color: #ffffff;
   height: 100vh;

@@ -32,10 +32,6 @@ function handleSelection() {
 </script>
 
 <style scoped>
-.dropdown {
-  margin-bottom: 20px;
-}
-
 label {
   margin-right: 10px;
   font-weight: bold;

@@ -43,6 +43,10 @@ const handleLogin = async () => {
       userStore.setUserNumber(userNumber);
       userStore.setUserDeptId(userDeptId);
 
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("userNumber", userNumber);
+      localStorage.setItem("userDeptId", userDeptId);
+
       if (userDeptId === "01") {
         router.push("/dashboard");
       } else if (userDeptId === "02") {
