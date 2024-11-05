@@ -30,8 +30,8 @@ const handleLogin = async () => {
 
       // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-      const deptId = response.data.deptId;
-      console.log("부서 ID: ", deptId);
+      const userDeptId = response.data.deptId;
+      console.log("부서 ID: ", userDeptId);
 
       const userName = response.data.userName;
       console.log("사용자 이름: ", userName);
@@ -41,10 +41,11 @@ const handleLogin = async () => {
 
       userStore.setUserName(userName);
       userStore.setUserNumber(userNumber);
+      userStore.setUserDeptId(userDeptId);
 
-      if (deptId === "01") {
+      if (userDeptId === "01") {
         router.push("/dashboard");
-      } else if (deptId === "02") {
+      } else if (userDeptId === "02") {
         router.push("/kiosk");
       } else {
         alert("권한이 없습니다.");

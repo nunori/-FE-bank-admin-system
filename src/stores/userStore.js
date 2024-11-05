@@ -4,6 +4,7 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     userName: "",
     userNumber: "",
+    userDeptId: "",
   }),
   actions: {
     setUserName(userName) {
@@ -17,6 +18,12 @@ export const useUserStore = defineStore("user", {
     },
     clearUserNumber() {
       this.userNumber = "";
+    },
+    setUserDeptId(userDeptId) {
+      this.userDeptId = userDeptId;
+    },
+    clearUserDeptId() {
+      this.userDeptId = "";
     },
   },
 });
