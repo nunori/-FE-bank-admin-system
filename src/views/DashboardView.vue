@@ -1,13 +1,13 @@
 <script setup>
-import { ref } from "vue";
-import { useUserStore } from "@/stores/userStore.js";
-
 import Sidebar from "@/components/Sidebar.vue";
 import Dropdown from "@/components/dashboard/Dropdown.vue";
 import DashboardSummary from "@/components/dashboard/DashboardSummary.vue";
 import CustomerChart from "@/components/dashboard/CustomerChart.vue";
 import WaitTimeChart from "@/components/dashboard/WaitTimeChart.vue";
 import TimeBasedCustomerChart from "@/components/dashboard/TimeBasedCustomerChart.vue";
+import DatePickerModal from "@/components/dashboard/DatePickerModal.vue";
+import axiosInstance from "@/axios.js";
+import { ref } from "vue";
 
 const summaryData = [
   { title: "내점 고객 수", value: "1,200명" },
@@ -17,6 +17,27 @@ const summaryData = [
 function onBranchChange(selectedBranch) {
   console.log("Selected branch: ", selectedBranch);
 }
+
+const showModal = ref(false);
+
+const fetchData = async ({ startDate, endDate }) => {
+  try {
+    const response = await axiosInstance.post(`/dashboard/customers/count`, {
+      deptId: "02",
+      period: "day",
+      startDate: startDate,
+      endDate: endDate,
+    });
+    console.log("선택한 날짜:", { startDate, endDate });
+    console.log("날짜 response: ", response.data);
+  } catch (error) {
+    console.error("날짜선택 오류: ", error);
+  }
+};
+
+const onDateSelected = (dates) => {
+  fetchData(dates);
+};
 </script>
 
 <template>
@@ -25,6 +46,15 @@ function onBranchChange(selectedBranch) {
     <div class="info-container">
       <div class="dropdown-container">
         <Dropdown @change="onBranchChange" />
+      </div>
+      <div class="date-picker-container">
+        <button @click="showModal = true">달력 아이콘</button>
+        <DatePickerModal
+          v-if="showModal"
+          :showModal="showModal"
+          @close="showModal = false"
+          :onDateSelected="onDateSelected"
+        />
       </div>
       <div class="grid-layout">
         <div class="grid-item">
@@ -41,7 +71,6 @@ function onBranchChange(selectedBranch) {
         </div>
       </div>
     </div>
-    <!-- dvw width 반응형으로 작동 -->
   </div>
 </template>
 
@@ -55,17 +84,16 @@ function onBranchChange(selectedBranch) {
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 0 1rem;
 }
 
 .dropdown-container {
-  margin-bottom: 3rem;
   display: flex;
   align-items: center;
   gap: 2.5%;
 }
 
 .grid-layout {
-  /* width: 100%; */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 5%;
