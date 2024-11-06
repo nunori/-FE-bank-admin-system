@@ -63,7 +63,7 @@ const handleLogin = async () => {
         router.push("/dashboard");
       } else if (deptCode === "02") {
         // deptId -> deptCode로 변경
-        router.push("/kiosk");
+        router.push("/kiosk/ticket-custom");
       } else {
         alert("권한이 없습니다.");
       }
