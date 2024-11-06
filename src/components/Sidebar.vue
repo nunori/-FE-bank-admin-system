@@ -16,14 +16,14 @@
           대시보드
         </li>
         <li
-          @click="handleNavigation('/kiosk-buttons', '02')"
-          :class="{ active: isActive('/kiosk-buttons') }"
+          @click="handleNavigation('/kiosk/buttons', '02')"
+          :class="{ active: isActive('/kiosk/buttons') }"
         >
           키오스크 버튼
         </li>
         <li
-          @click="handleNavigation('/kiosk-order', '02')"
-          :class="{ active: isActive('/kiosk-order') }"
+          @click="handleNavigation('/kiosk/ticket-custom', '02')"
+          :class="{ active: isActive('/kiosk/ticket-custom') }"
         >
           키오스크 순번표
         </li>
@@ -46,8 +46,8 @@ import { onMounted } from "vue";
 const router = useRouter();
 const userStore = useUserStore();
 
-const handleNavigation = (path, requiredDeptId) => {
-  if (userStore.userDeptId !== requiredDeptId) {
+const handleNavigation = (path, requiredDeptCode) => {
+  if (userStore.userDeptCode !== requiredDeptCode) {
     alert("권한이 없습니다.");
   } else {
     router.push(path);
@@ -62,9 +62,12 @@ onMounted(() => {
   const userName = localStorage.getItem("userName") || "";
   const userNumber = localStorage.getItem("userNumber") || "";
   const userDeptId = localStorage.getItem("userDeptId") || "";
+  const userDeptCode = localStorage.getItem("userDeptCode") || "";
   userStore.setUserName(userName);
   userStore.setUserNumber(userNumber);
   userStore.setUserDeptId(userDeptId);
+  userStore.setUserDeptCode(userDeptCode);
+  console.log("현재 유저 dept code: ", userStore.userDeptCode);
 });
 </script>
 
@@ -73,7 +76,6 @@ onMounted(() => {
   width: 15dvw;
   background-color: #1a1a2e;
   color: #ffffff;
-  height: 100vh;
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
   display: flex;

@@ -3,6 +3,8 @@ import HomeView from "@/views/HomeView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import KioskButtonView from "@/views/KioskButtonView.vue";
+import TicketCustomView from "@/views/TicketCustomView.vue";
+import BranchLayoutCustomView from "@/views/BranchLayoutCustomView.vue";
 
 const routes = [
   {
@@ -21,9 +23,19 @@ const routes = [
     component: DashboardView,
   },
   {
-    path: "/kiosk/button-custom",
+    path: "/kiosk/buttons",
     name: "ButtonCustom",
     component: KioskButtonView,
+  },
+  {
+    path: "/kiosk/ticket-custom",
+    name: "TicketCustom",
+    component: TicketCustomView,
+  },
+  {
+    path: "/branch-layout",
+    name: "BranchLayoutCustom",
+    component: BranchLayoutCustomView,
   },
 ];
 
