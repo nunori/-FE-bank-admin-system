@@ -1,7 +1,13 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import App from "@/App.vue";
-import router from "@/router/index.js"; // 라우트 설정 파일
+import router from "@/router/index.js";
+import "@/assets/styles.css";
 
 const app = createApp(App);
+const pinia = createPinia();
+
+app.use(pinia);
 app.use(router);
+
 app.mount("#app");

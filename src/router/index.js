@@ -1,19 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import DashboardView from "@/views/DashboardView.vue";
+import KioskButtonView from "@/views/KioskButtonView.vue";
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: HomeView,
-  },
-  {
-    path: "/login",
-    name: "LoginView",
-    component: LoginView,
   },
   {
     path: "/register",
@@ -24,6 +19,11 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: DashboardView,
+  },
+  {
+    path: "/kiosk/button-custom",
+    name: "ButtonCustom",
+    component: KioskButtonView,
   },
 ];
 
