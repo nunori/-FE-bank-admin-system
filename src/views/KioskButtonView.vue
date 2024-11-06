@@ -1,26 +1,27 @@
 <script setup>
-import KioskButtonCustomization from "@/components/kiosk/KioskButtonCustomization.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import KioskButtons from "@/components/kiosk/KioskButtons.vue";
+import KioskButtonPreview from "@/components/kiosk/KioskButtonPreview.vue";
 </script>
 
 <template>
   <div class="page-container">
     <Sidebar />
     <div class="main-content">
-      <KioskButtonCustomization />
+      <KioskButtonPreview />
+      <KioskButtons />
     </div>
   </div>
 </template>
 
 <style scoped>
 .page-container {
-  display: flex; /* Flexbox를 사용하여 가로로 배치 */
-  height: 100vh; /* 전체 높이를 사용 */
+  display: flex;
+  flex-direction: row;
 }
 
 .main-content {
-  flex: 1; /* 남은 공간을 차지 */
-  padding: 2rem; /* 패딩 추가 */
-  overflow-y: auto; /* 세로 스크롤 가능 */
+  display: flex;
+  flex-direction: row;
 }
 </style>
