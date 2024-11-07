@@ -8,7 +8,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.Authorization = `Bearer ${accessToken}`; // 백틱으로 감싸기
       console.log("tokentoken: ", config.headers.Authorization);
     }
     return config;

@@ -1,9 +1,18 @@
 <script setup>
 import Sidebar from "@/components/Sidebar.vue";
 import { RouterView, useRoute } from "vue-router";
+import { ref, watch } from "vue";
 
 const route = useRoute();
-const showSidebar = route.path !== "/";
+const showSidebar = ref(route.path !== "/home"); // 초기 경로에 따라 설정
+
+// 경로가 변경될 때마다 showSidebar를 업데이트
+watch(
+  () => route.path,
+  (newPath) => {
+    showSidebar.value = newPath !== "/home";
+  }
+);
 </script>
 
 <template>

@@ -8,7 +8,7 @@ import BranchLayoutView from "@/views/BranchLayoutView.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/home",
     name: "Home",
     component: HomeView,
   },
