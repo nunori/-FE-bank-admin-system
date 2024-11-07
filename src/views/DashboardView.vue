@@ -42,7 +42,6 @@ const onDateSelected = (dates) => {
 
 <template>
   <div class="dashboard-container">
-    <Sidebar />
     <div class="info-container">
       <div class="dropdown-container">
         <Dropdown @change="onBranchChange" />

@@ -4,7 +4,7 @@ import RegisterView from "@/views/RegisterView.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import KioskButtonView from "@/views/KioskButtonView.vue";
 import TicketCustomView from "@/views/TicketCustomView.vue";
-import BranchLayoutCustomView from "@/views/BranchLayoutCustomView.vue";
+import BranchLayoutView from "@/views/BranchLayoutView.vue";
 
 const routes = [
   {
@@ -35,7 +35,7 @@ const routes = [
   {
     path: "/branch-layout",
     name: "BranchLayoutCustom",
-    component: BranchLayoutCustomView,
+    component: BranchLayoutView,
   },
 ];
 
