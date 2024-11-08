@@ -10,7 +10,7 @@
             v-model.number="localGridWidth"
             type="number"
             min="5"
-            max="30"
+            max="100"
             class="grid-input"
           />
           <button @click="increaseWidth" class="control-btn">+</button>
@@ -127,18 +127,24 @@ const localGridHeight = ref(10);
 
 // Grid size API 호출
 const loadGridSize = async () => {
+  console.log("적용 중인 층:", props.deptId, props.floorNumber); // props가 올바르게 전달되었는지 확인
+
   try {
-    const response = await axiosInstance.get(`/branch-layout/grid/size`, {
-      params: {
-        deptId: props.deptId,
-        floorNumber: props.floorNumber,
-      },
+    const response = await axiosInstance.post(`/branch-layout/grid/size`, {
+      deptId: props.deptId,
+      floorNumber: props.floorNumber,
     });
 
     if (response.status === 200) {
+      // 받아온 데이터를 localGridWidth와 localGridHeight에 반영
       localGridWidth.value = response.data.width;
       localGridHeight.value = response.data.height;
-      emit("grid-size-changed", response.data);
+      console.log(
+        "로딩된 그리드 크기:",
+        localGridWidth.value,
+        localGridHeight.value
+      ); // 확인 로그 추가
+      emit("grid-size-changed", response.data); // 데이터 변경 후 이벤트 발생
     }
   } catch (error) {
     console.error("그리드 크기 조회 실패:", error);
@@ -149,19 +155,13 @@ const loadGridSize = async () => {
 // 그리드 크기 적용
 const applyGridSize = async () => {
   try {
-    const response = await axiosInstance.put(
-      `/branch-layout/grid/size`,
-      {
-        width: localGridWidth.value,
-        height: localGridHeight.value,
-      },
-      {
-        params: {
-          deptId: props.deptId,
-          floorNumber: props.floorNumber,
-        },
-      }
-    );
+    console.log("적용 중인 층:", props.deptId, props.floorNumber);
+    const response = await axiosInstance.put(`/branch-layout/grid/size`, {
+      deptId: props.deptId,
+      floorNumber: props.floorNumber,
+      width: localGridWidth.value,
+      height: localGridHeight.value,
+    });
 
     if (response.status === 200) {
       emit("grid-size-changed", response.data);
@@ -211,11 +211,11 @@ const getElementAtPosition = (row, col) => {
     );
   });
 
-  if (!element) {
-    console.log(`No element found at position row:${row}, col:${col}`);
-  } else {
-    console.log(`Element found at row:${row}, col:${col} - `, element);
-  }
+  // if (!element) {
+  //   console.log(`No element found at position row:${row}, col:${col}`);
+  // } else {
+  //   console.log(`Element found at row:${row}, col:${col} - `, element);
+  // }
 
   return element;
 };
@@ -295,6 +295,25 @@ const checkCollision = (row, col, width, height) => {
 // props 변경 감지
 // watch(() => props.deptId, loadGridSize);
 // watch(() => props.floorNumber, loadGridSize);
+watch(
+  () => [props.deptId, props.floorNumber],
+  async ([newDeptId, newFloorNumber]) => {
+    // deptId와 floorNumber가 정의되어 있는 경우에만 동작
+    if (newDeptId != null && newFloorNumber != null) {
+      await loadGridSize(); // deptId와 floorNumber 변경 시 그리드 크기 로드
+    }
+  },
+  { immediate: true }
+);
+watch(
+  () => [props.deptId, props.floorNumber],
+  async () => {
+    console.log("층 변경 감지:", props.deptId, props.floorNumber); // 층 변경 감지 로그
+    await loadGridSize(); // deptId와 floorNumber 변경 시 그리드 크기 로드
+  },
+  { immediate: true }
+);
+
 // 요소 리스트가 변경될 때마다 다시 렌더링
 watch(
   () => props.elements,

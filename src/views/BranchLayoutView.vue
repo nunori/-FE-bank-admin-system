@@ -14,8 +14,8 @@
 
       <div class="layout-container">
         <GridLayout
-          :dept-id="currentDeptId"
-          :floor-number="currentFloorNumber"
+          :dept-id="Number(currentDeptId)"
+          :floor-number="Number(currentFloorNumber)"
           :elements="elements"
           @element-dropped="handleElementDrop"
           @grid-size-changed="handleGridSizeChanged"
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import FloorSelector from "@/components/branch/FloorSelector.vue";
 import ElementPalette from "@/components/branch/ElementPalette.vue";
 import GridLayout from "@/components/branch/GridLayout.vue";
@@ -39,14 +39,36 @@ const elements = ref([]);
 const gridWidth = ref(20);
 const gridHeight = ref(15);
 
-const currentDeptId = ref(1); // 현재 부서 ID
+const currentDeptId = ref(userStore.userDeptId);
 const currentFloorNumber = ref(1); // 현재 층 번호
 const layoutElements = ref([]); // 레이아웃 요소들
 
+const deptId = ref(1);
+const floorNumber = ref(1);
+
+watch(
+  [currentDeptId, currentFloorNumber],
+  ([newDeptId, newFloorNumber]) => {
+    console.log("BranchLayoutView에서 변경 감지:", newDeptId, newFloorNumber);
+  },
+  { immediate: true }
+);
+
 const handleFloorSelected = (floor) => {
   selectedFloor.value = floor;
+  // currentDeptId와 currentFloorNumber 업데이트
+  currentDeptId.value = floor.deptId;
+  currentFloorNumber.value = floor.floorNumber;
+  console.log("층 변경 감지:", floor, "현재 층:", currentFloorNumber.value);
   fetchElements();
 };
+// const handleFloorSelected = (floor) => {
+//   selectedFloor.value = floor;
+//   fetchElements();
+//   deptId.value = floor.deptId;
+//   floorNumber.value = floor.floorNumber;
+//   console.log("층 변경 감지:", floor); // 변경된 층 정보 확인
+// };
 
 const handleElementDrop = async (droppedElement) => {
   try {
