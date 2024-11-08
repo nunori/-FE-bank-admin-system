@@ -3,14 +3,19 @@
     <div class="preview-container">
       <h2 class="title">미리보기</h2>
       <div class="buttons-container">
-        <button
-          v-for="item in visibleItems"
-          :key="item.id"
-          class="preview-button"
-        >
-          <!-- {{ item.description || item.name }} -->
-          {{ item.description || item.name }}
-        </button>
+        <div v-for="item in visibleItems" :key="item.id" class="preview-button">
+          <!-- 로고인 경우 이미지를, 아닌 경우 텍스트를 표시 -->
+          <template v-if="item.name === '로고'">
+            <img
+              src="@/assets/img/imbank_logo.png"
+              alt="IM Bank Logo"
+              class="logo-image"
+            />
+          </template>
+          <template v-else>
+            {{ item.description || item.name }}
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -21,24 +26,30 @@ import { computed } from "vue";
 import { usePreviewStore } from "@/stores/previewStore.js";
 
 const previewStore = usePreviewStore();
+
 const visibleItems = computed(() => {
-  console.log("Preview items:", previewStore.visibleItems); // 디버깅용
-  return previewStore.visibleItems;
+  return previewStore.visibleItems
+    .filter((item) => item.visible)
+    .sort((a, b) => a.position - b.position);
 });
 </script>
 
 <style scoped>
+/* 기존 스타일 추가 */
 .ticket-preview {
   background: white;
   border-radius: 2rem;
   padding: 3rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  width: 100%; /* 변경: 고정 너비 제거 */
-  margin: 0; /* 변경: margin 제거 */
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .preview-container {
-  height: 100%;
+  width: 8cm;
 }
 
 .title {
@@ -50,17 +61,17 @@ const visibleItems = computed(() => {
 
 .buttons-container {
   display: grid;
-  grid-template-columns: repeat(1, minmax(10px, 1fr)); /* 변경: 반응형 그리드 */
+  grid-template-columns: repeat(1, minmax(10px, 1fr));
   gap: 16px;
   padding: 16px;
   background: #f8f9fa;
-  border-radius: 8px;
+  text-align: center; /* 컨테이너 중앙 정렬 */
+  border: 1px solid rgb(156, 156, 156);
 }
 
 .preview-button {
   padding: 16px;
-  background-color: #3498db;
-  color: white;
+  color: #000000;
   border: none;
   border-radius: 6px;
   font-size: 1rem;
@@ -74,18 +85,16 @@ const visibleItems = computed(() => {
   transform: translateY(-2px);
 }
 
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  resize: vertical;
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.preview-button {
-  white-space: pre-wrap;
-  text-align: left;
-  min-height: 60px;
+.logo-image {
+  max-width: 10rem;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 </style>
