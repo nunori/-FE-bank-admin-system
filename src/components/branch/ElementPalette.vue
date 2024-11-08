@@ -76,6 +76,7 @@
             <option value="window">창구</option>
             <option value="wall">벽</option>
             <option value="entrance">입구</option>
+            <option value="kiosk">키오스크</option>
           </select>
         </div>
         <div class="form-group">
@@ -306,6 +307,10 @@ const handleTypeChange = () => {
     case "wall":
       elementForm.value.elementColor = "#90A4AE"; // 회색
       elementForm.value.elementTypeDescription = "벽";
+      break;
+    case "kiosk":
+      elementForm.value.elementColor = "#FE9A2E"; // 회색
+      elementForm.value.elementTypeDescription = "키오스크";
       break;
   }
 };
