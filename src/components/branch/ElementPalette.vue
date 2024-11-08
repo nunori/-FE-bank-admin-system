@@ -165,7 +165,9 @@ const fetchElements = async () => {
       floorNumber: props.currentFloor.floorNumber,
     });
     console.log("서버로부터 받아온 요소 목록:", response.data); // 서버 응답 확인
-    elements.value = response.data;
+    elements.value = response.data.sort((a, b) =>
+      a.elementName.localeCompare(b.elementName)
+    );
     // layoutElements.value = response.data;
     console.log("layoutElements 업데이트 후:", elements.value); // 업데이트 후 데이터 확인
   } catch (error) {
