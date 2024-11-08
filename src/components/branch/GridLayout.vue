@@ -312,6 +312,11 @@ onMounted(loadGridSize);
 <style scoped>
 .grid-controls {
   margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 1rem;
+  height: 3rem;
 }
 
 .grid-size-controls {
@@ -369,7 +374,9 @@ onMounted(loadGridSize);
 .grid-container {
   width: 100%;
   padding-bottom: 100%;
-  position: relative;
+  position: sticky;
+  top: 6rem;
+  z-index: 10;
 }
 
 .grid-layout {
