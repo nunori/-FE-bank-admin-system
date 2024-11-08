@@ -327,11 +327,14 @@ const applyChanges = async () => {
     ticketButtonId: item.ticketButtonId,
     position: index + 1,
     visible: item.visible,
+    buttonName: item.buttonName,
+    buttonDescription: item.buttonDescription, // 추가
   }));
 
   try {
     await axiosInstance.put("/kiosk/ticket-layout/update", payload);
     alert("저장되었습니다.");
+    await fetchButtonData();
   } catch (error) {
     console.error("변경사항 저장 중 오류 발생:", error);
     alert("저장에 실패했습니다.");
