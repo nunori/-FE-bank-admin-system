@@ -12,16 +12,14 @@
         <ElementPalette :current-floor="selectedFloor" />
       </div>
 
-      <div class="right-panel">
+      <div class="layout-container">
         <GridLayout
-          v-if="selectedFloor"
-          :grid-width="gridWidth"
-          :grid-height="gridHeight"
+          :dept-id="currentDeptId"
+          :floor-number="currentFloorNumber"
           :elements="elements"
           @element-dropped="handleElementDrop"
-          @grid-size-changed="handleGridSizeChange"
+          @grid-size-changed="handleGridSizeChanged"
         />
-        <div v-else class="no-floor">층을 선택해주세요</div>
       </div>
     </div>
   </div>
@@ -41,6 +39,10 @@ const elements = ref([]);
 const gridWidth = ref(20);
 const gridHeight = ref(15);
 
+const currentDeptId = ref(1); // 현재 부서 ID
+const currentFloorNumber = ref(1); // 현재 층 번호
+const layoutElements = ref([]); // 레이아웃 요소들
+
 const handleFloorSelected = (floor) => {
   selectedFloor.value = floor;
   fetchElements();
@@ -52,6 +54,12 @@ const handleElementDrop = async (droppedElement) => {
     console.log("elementGridX:", droppedElement.elementGridX);
     console.log("elementGridY:", droppedElement.elementGridY);
     console.log("elementColor:", droppedElement.elementColor || "#FFFFFF");
+
+    // layoutElements를 업데이트하여 새로운 요소 위치 반영
+    layoutElements.value = layoutElements.value.map((el) =>
+      el.elementId === droppedElement.elementId ? droppedElement : el
+    );
+
     await axiosInstance.put("/branch-layout/update", {
       elementId: droppedElement.elementId,
       elementGridX: droppedElement.elementGridX,
@@ -62,13 +70,14 @@ const handleElementDrop = async (droppedElement) => {
       elementWidth: droppedElement.elementWidth || 1,
       elementName: droppedElement.elementName || "이름 미지정",
     });
+
     await fetchElements();
   } catch (error) {
     console.error("요소 위치 업데이트 실패:", error);
   }
 };
 
-const handleGridSizeChange = ({ width, height }) => {
+const handleGridSizeChanged = ({ width, height }) => {
   gridWidth.value = width;
   gridHeight.value = height;
 };
