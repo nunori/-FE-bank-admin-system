@@ -12,14 +12,16 @@
         <ElementPalette :current-floor="selectedFloor" />
       </div>
 
-      <div class="layout-container">
-        <GridLayout
-          :dept-id="Number(currentDeptId)"
-          :floor-number="Number(currentFloorNumber)"
-          :elements="elements"
-          @element-dropped="handleElementDrop"
-          @grid-size-changed="handleGridSizeChanged"
-        />
+      <div class="layout-wrapper">
+        <div class="layout-container">
+          <GridLayout
+            :dept-id="Number(currentDeptId)"
+            :floor-number="Number(currentFloorNumber)"
+            :elements="elements"
+            @element-dropped="handleElementDrop"
+            @grid-size-changed="handleGridSizeChanged"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -122,7 +124,7 @@ const fetchElements = async () => {
 <style scoped>
 .branch-layout-view {
   padding: 2rem;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -140,29 +142,28 @@ const fetchElements = async () => {
   flex: 1;
 }
 
-.left-panel {
+/* .left-panel {
   width: 250px;
+  height: fit-content;
   background: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+  position: sticky;
+  top: 2rem;
+  flex-shrink: 0;
+} */
 
-.right-panel {
+.layout-wrapper {
   flex: 1;
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh; /* 스크롤을 위한 최소 높이 설정 */
 }
 
-.no-floor {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  font-size: 1.2rem;
+.layout-container {
+  width: 90%;
+  max-width: 1200px;
 }
 
 h2 {

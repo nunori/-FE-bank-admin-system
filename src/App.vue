@@ -4,9 +4,8 @@ import { RouterView, useRoute } from "vue-router";
 import { ref, watch } from "vue";
 
 const route = useRoute();
-const showSidebar = ref(route.path !== "/home"); // 초기 경로에 따라 설정
+const showSidebar = ref(route.path !== "/home");
 
-// 경로가 변경될 때마다 showSidebar를 업데이트
 watch(
   () => route.path,
   (newPath) => {
@@ -17,8 +16,7 @@ watch(
 
 <template>
   <div id="app">
-    <Sidebar v-if="showSidebar" />
-
+    <Sidebar v-if="showSidebar" class="sidebar" />
     <div :class="{ 'main-content': true, 'full-width': !showSidebar }">
       <RouterView />
     </div>
@@ -28,9 +26,21 @@ watch(
 <style scoped>
 #app {
   display: flex;
+  min-height: 100vh; /* 전체 뷰포트 높이 */
+  height: 100vh; /* 고정 높이 */
+}
+
+.sidebar {
+  height: 100%; /* 부모(#app)의 높이를 따라감 */
 }
 
 .main-content {
-  flex-grow: 1; /* 사이드바 옆에 메인 컨텐츠 영역이 확장됨 */
+  flex-grow: 1;
+  height: 100vh; /* 전체 높이 */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 */
+}
+
+.full-width {
+  width: 100%;
 }
 </style>

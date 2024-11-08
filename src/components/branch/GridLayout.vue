@@ -1,36 +1,38 @@
 <template>
-  <div class="grid-controls">
-    <!-- 그리드 사이즈 조절 UI -->
-    <div class="grid-size-controls">
-      <div class="size-input">
-        <label>가로</label>
-        <div class="input-with-buttons">
-          <button @click="decreaseWidth" class="control-btn">-</button>
-          <input
-            v-model.number="localGridWidth"
-            type="number"
-            min="5"
-            max="100"
-            class="grid-input"
-          />
-          <button @click="increaseWidth" class="control-btn">+</button>
+  <div class="grid-wrapper">
+    <div class="grid-controls">
+      <!-- 그리드 사이즈 조절 UI -->
+      <div class="grid-size-controls">
+        <div class="size-input">
+          <label>가로</label>
+          <div class="input-with-buttons">
+            <button @click="decreaseWidth" class="control-btn">-</button>
+            <input
+              v-model.number="localGridWidth"
+              type="number"
+              min="5"
+              max="100"
+              class="grid-input"
+            />
+            <button @click="increaseWidth" class="control-btn">+</button>
+          </div>
         </div>
-      </div>
-      <div class="size-input">
-        <label>세로</label>
-        <div class="input-with-buttons">
-          <button @click="decreaseHeight" class="control-btn">-</button>
-          <input
-            v-model.number="localGridHeight"
-            type="number"
-            min="5"
-            max="30"
-            class="grid-input"
-          />
-          <button @click="increaseHeight" class="control-btn">+</button>
+        <div class="size-input">
+          <label>세로</label>
+          <div class="input-with-buttons">
+            <button @click="decreaseHeight" class="control-btn">-</button>
+            <input
+              v-model.number="localGridHeight"
+              type="number"
+              min="5"
+              max="30"
+              class="grid-input"
+            />
+            <button @click="increaseHeight" class="control-btn">+</button>
+          </div>
         </div>
+        <button class="apply-btn" @click="applyGridSize">적용</button>
       </div>
-      <button class="apply-btn" @click="applyGridSize">적용</button>
     </div>
   </div>
 
@@ -329,19 +331,31 @@ onMounted(loadGridSize);
 </script>
 
 <style scoped>
+.grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100px;
+}
 .grid-controls {
-  margin-bottom: 1rem;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 11;
   padding: 1rem;
-  height: 3rem;
+  background-color: white;
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  width: 100%;
 }
 
 .grid-size-controls {
   display: flex;
   gap: 1rem;
   align-items: flex-end;
+  max-width: 1200px;
+  width: 90%;
+  flex-wrap: wrap;
+  justify-content: center; /* 내부 요소들도 가운데 정렬 */
 }
 
 .size-input {
@@ -391,10 +405,13 @@ onMounted(loadGridSize);
 }
 
 .grid-container {
-  width: 100%;
-  padding-bottom: 100%;
   position: sticky;
-  top: 6rem;
+  width: 100%;
+  top: 4rem;
+  padding-bottom: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
 }
 
