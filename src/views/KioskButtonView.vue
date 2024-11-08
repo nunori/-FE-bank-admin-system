@@ -6,7 +6,6 @@ import KioskButtonPreview from "@/components/kiosk/KioskButtonPreview.vue";
 
 <template>
   <div class="page-container">
-    <Sidebar />
     <div class="main-content">
       <KioskButtonPreview />
       <KioskButtons />

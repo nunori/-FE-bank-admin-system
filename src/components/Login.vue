@@ -10,73 +10,63 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const handleLogin = async () => {
-  if (userid.value && password.value) {
-    try {
-      const response = await axiosInstance.post(`/auth/login`, {
-        userNumber: userid.value,
-        userPassword: password.value,
-      });
-
-      console.log("전체응답: ", response.data);
-
-      const {
-        accessToken,
-        refreshToken,
-        deptId,
-        deptCode, // 새로 추가
-        userName,
-        userNumber,
-        dvcd, // 새로 추가
-      } = response.data;
-
-      console.log("accessToken: ", accessToken);
-      console.log("refreshToken: ", refreshToken);
-      console.log("부서 ID: ", deptId);
-      console.log("부서 코드: ", deptCode);
-      console.log("사용자 이름: ", userName);
-      console.log("행번: ", userNumber);
-      console.log("업무구분코드: ", dvcd);
-
-      // 토큰 저장
-      localStorage.setItem("accessToken", accessToken);
-      if (refreshToken) {
-        localStorage.setItem("refreshToken", refreshToken);
-      }
-
-      // 사용자 정보 스토어에 저장
-      userStore.setUserName(userName);
-      userStore.setUserNumber(userNumber);
-      userStore.setUserDeptId(deptId);
-      userStore.setUserDeptCode(deptCode); // 새로 추가 (스토어에 해당 메서드 추가 필요)
-      userStore.setUserDvcd(dvcd); // 새로 추가 (스토어에 해당 메서드 추가 필요)
-
-      // 로컬 스토리지에 사용자 정보 저장
-      localStorage.setItem("userName", userName);
-      localStorage.setItem("userNumber", userNumber);
-      localStorage.setItem("userDeptId", deptId);
-      localStorage.setItem("userDeptCode", deptCode);
-      localStorage.setItem("userDvcd", dvcd);
-
-      // 부서 코드에 따른 라우팅
-      if (deptCode === "01") {
-        // deptId -> deptCode로 변경
-        router.push("/dashboard");
-      } else if (deptCode === "02") {
-        // deptId -> deptCode로 변경
-        router.push("/kiosk/ticket-custom");
-      } else {
-        alert("권한이 없습니다.");
-      }
-    } catch (e) {
-      console.error("로그인 오류: ", e);
-      if (e.response?.data?.message) {
-        alert(e.response.data.message);
-      } else {
-        alert("로그인에 실패했습니다. 다시 시도해주세요.");
-      }
-    }
-  } else {
+  if (!userid.value?.trim() || !password.value?.trim()) {
     alert("아이디와 비밀번호를 입력하세요.");
+    return;
+  }
+
+  try {
+    const response = await axiosInstance.post(`/auth/login`, {
+      userNumber: userid.value.trim(),
+      userPassword: password.value.trim(),
+    });
+
+    const userData = response.data;
+    console.log("전체응답: ", response.data);
+
+    if (!userData.accessToken) {
+      throw new Error("인증 토큰이 없습니다.");
+    }
+
+    // 토큰 저장
+    localStorage.setItem("accessToken", userData.accessToken);
+    userData.refreshToken &&
+      localStorage.setItem("refreshToken", userData.refreshToken);
+
+    // 사용자 정보 저장
+    const userInfo = {
+      userName: userData.userName,
+      userNumber: userData.userNumber,
+      userDeptId: userData.deptId,
+      userDeptCode: userData.deptCode,
+      userDvcd: userData.dvcd,
+    };
+
+    // Store에 저장
+    Object.entries(userInfo).forEach(([key, value]) => {
+      if (value) {
+        userStore[`set${key.charAt(0).toUpperCase() + key.slice(1)}`](value);
+        localStorage.setItem(key, value);
+      }
+    });
+
+    // 라우팅
+    switch (userData.deptCode) {
+      case "01":
+        router.push("/dashboard");
+        break;
+      case "02":
+        router.push("/kiosk/ticket-custom");
+        break;
+      default:
+        alert("권한이 없습니다.");
+    }
+  } catch (error) {
+    console.error("로그인 오류:", error);
+    const errorMessage =
+      error.response?.data?.message ||
+      "로그인에 실패했습니다. 다시 시도해주세요.";
+    alert(errorMessage);
   }
 };
 </script>

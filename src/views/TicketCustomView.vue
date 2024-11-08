@@ -6,7 +6,6 @@ import TicketPreview from "@/components/ticket/TicketPreview.vue";
 
 <template>
   <div class="ticket-container">
-    <Sidebar class="sidebar" />
     <div class="main-content">
       <div class="ticket-layout">
         <TicketPreview />
