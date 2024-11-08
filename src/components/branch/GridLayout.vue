@@ -59,11 +59,42 @@
               :class="getElementClass(getElementAtPosition(row - 1, col - 1))"
               :style="getElementStyle(getElementAtPosition(row - 1, col - 1))"
             >
-              {{ getElementAtPosition(row - 1, col - 1).elementName }}
+              <!-- 요소의 중앙 셀에만 이름 표시 -->
+              <template
+                v-if="
+                  isCenterOfElement(
+                    row - 1,
+                    col - 1,
+                    getElementAtPosition(row - 1, col - 1)
+                  )
+                "
+              >
+                {{ getElementAtPosition(row - 1, col - 1).elementName }}
+              </template>
             </div>
           </template>
         </div>
       </template>
+      <!-- <template v-for="row in localGridHeight" :key="`row-${row}`">
+        <div
+          v-for="col in localGridWidth"
+          :key="`cell-${row}-${col}`"
+          class="grid-cell"
+          @dragover.prevent
+          @drop="handleDrop($event, { row: row - 1, col: col - 1 })"
+          @dragenter.prevent
+        >
+          <template v-if="getElementAtPosition(row - 1, col - 1)">
+            <div
+              class="grid-element"
+              :class="getElementClass(getElementAtPosition(row - 1, col - 1))"
+              :style="getElementStyle(getElementAtPosition(row - 1, col - 1))"
+            >
+              {{ getElementAtPosition(row - 1, col - 1).elementName }}
+            </div>
+          </template>
+        </div>
+      </template> -->
     </div>
   </div>
 </template>
@@ -145,6 +176,12 @@ const applyGridSize = async () => {
   }
 };
 
+const isCenterOfElement = (row, col, element) => {
+  const centerX = element.elementGridX + Math.floor(element.elementWidth / 2);
+  const centerY = element.elementGridY + Math.floor(element.elementHeight / 2);
+  return row === centerY && col === centerX;
+};
+
 // 가로/세로 크기 조절 함수들
 const increaseWidth = () => {
   if (localGridWidth.value < 30) localGridWidth.value++;
@@ -162,20 +199,6 @@ const decreaseHeight = () => {
   if (localGridHeight.value > 5) localGridHeight.value--;
 };
 
-// 요소가 특정 위치에 있는지 확인하고 반환하는 함수
-// const getElementAtPosition = (row, col) => {
-//   console.log("getElementAtPosition 실행");
-//   return props.elements.find((element) => {
-//     const elementEndX = element.elementGridX + element.elementWidth;
-//     const elementEndY = element.elementGridY + element.elementHeight;
-//     return (
-//       col >= element.elementGridX &&
-//       col < elementEndX &&
-//       row >= element.elementGridY &&
-//       row < elementEndY
-//     );
-//   });
-// };
 const getElementAtPosition = (row, col) => {
   const element = props.elements.find((element) => {
     const elementEndX = element.elementGridX + element.elementWidth;

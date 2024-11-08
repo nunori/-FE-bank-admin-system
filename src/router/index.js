@@ -8,7 +8,7 @@ import BranchLayoutView from "@/views/BranchLayoutView.vue";
 
 const routes = [
   {
-    path: "/home",
+    path: "/kiohome",
     name: "Home",
     component: HomeView,
   },
