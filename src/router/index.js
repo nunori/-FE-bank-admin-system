@@ -8,6 +8,10 @@ import BranchLayoutView from "@/views/BranchLayoutView.vue";
 
 const routes = [
   {
+    path: "/",
+    redirect: "/home",
+  },
+  {
     path: "/home",
     name: "Home",
     component: HomeView,
@@ -40,7 +44,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 
