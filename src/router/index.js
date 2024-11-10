@@ -8,6 +8,10 @@ import BranchLayoutView from "@/views/BranchLayoutView.vue";
 
 const routes = [
   {
+    path: "/",
+    redirect: "/home",
+  },
+  {
     path: "/home",
     name: "Home",
     component: HomeView,
@@ -36,6 +40,11 @@ const routes = [
     path: "/branch-layout",
     name: "BranchLayoutCustom",
     component: BranchLayoutView,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: HomeView, // 또는 별도의 404 컴포넌트
   },
 ];
 

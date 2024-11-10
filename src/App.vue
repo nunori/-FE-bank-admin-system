@@ -4,12 +4,12 @@ import { RouterView, useRoute } from "vue-router";
 import { ref, watch } from "vue";
 
 const route = useRoute();
-const showSidebar = ref(route.path !== "/home");
+const showSidebar = ref(route.path !== "/home" && route.path !== "/");
 
 watch(
   () => route.path,
   (newPath) => {
-    showSidebar.value = newPath !== "/home";
+    showSidebar.value = newPath !== "/home" && newPath !== "/";
   }
 );
 </script>

@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import FloorSelector from "@/components/branch/FloorSelector.vue";
 import ElementPalette from "@/components/branch/ElementPalette.vue";
 import GridLayout from "@/components/branch/GridLayout.vue";
