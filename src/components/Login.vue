@@ -53,14 +53,19 @@ const handleLogin = async () => {
     // 라우팅
     switch (userData.deptCode) {
       case "01":
-        await router.push("/dashboard"); // await 추가
+        console.log("라우팅 시도 - dashboard");
+        await router.push("/dashboard");
+        console.log("dashboard 라우팅 완료");
         break;
       case "02":
-        await router.push("/kiosk/ticket-custom"); // await 추가
+        console.log("라우팅 시도 - ticket-custom");
+        await router.push("/kiosk/ticket-custom");
+        console.log("ticket-custom 라우팅 완료");
         break;
       default:
+        console.log("알 수 없는 deptCode:", userData.deptCode);
         alert("권한이 없습니다.");
-        return; // 권한 없을 때 함수 종료
+        return; // 함수 즉시 종료
     }
   } catch (error) {
     console.error("로그인 오류:", error);
