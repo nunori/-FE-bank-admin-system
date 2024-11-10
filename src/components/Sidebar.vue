@@ -6,7 +6,9 @@
 
     <div class="sidebar-content" :class="{ hidden: isCollapsed }">
       <div class="user-info">
-        <div class="avatar"></div>
+        <div class="avatar">
+          <img src="@/assets/img/profile_img.jpg" alt="profile_img" />
+        </div>
         <div class="user-details">
           <div class="name">{{ userStore.userName }}</div>
           <div class="number">{{ userStore.userNumber }}</div>
@@ -152,6 +154,13 @@ onMounted(() => {
   background-color: #333;
   margin-right: 10px;
   flex-shrink: 0;
+  overflow: hidden; /* 이미지가 영역을 벗어나지 않도록 설정 */
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
 }
 
 .user-details {
