@@ -285,7 +285,7 @@ onMounted(() => {
   padding: 1rem;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
   width: 80%;
-  height: 100%;
+  height: 90dvh;
 }
 
 .title {
@@ -344,7 +344,7 @@ onMounted(() => {
 .apply-button {
   width: 100%;
   padding: 12px;
-  background-color: #4caf50;
+  background-color: #36d198;
   color: white;
   border: none;
   border-radius: 6px;

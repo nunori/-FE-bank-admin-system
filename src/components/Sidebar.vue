@@ -24,6 +24,12 @@
             대시보드
           </li>
           <li
+            @click="handleNavigation('/kiosk/preview', '02')"
+            :class="{ active: isActive('/kiosk/preview') }"
+          >
+            키오스크 화면
+          </li>
+          <li
             @click="handleNavigation('/kiosk/buttons', '02')"
             :class="{ active: isActive('/kiosk/buttons') }"
           >

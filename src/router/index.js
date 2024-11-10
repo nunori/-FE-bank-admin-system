@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import DashboardView from "@/views/DashboardView.vue";
+import KioskButtonPreview from "@/components/kiosk/KioskButtonPreview.vue";
 import KioskButtonView from "@/views/KioskButtonView.vue";
 import TicketCustomView from "@/views/TicketCustomView.vue";
 import BranchLayoutView from "@/views/BranchLayoutView.vue";
@@ -9,7 +10,8 @@ import BranchLayoutView from "@/views/BranchLayoutView.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/home",
+    name: "HomrRedirect",
+    component: HomeView,
   },
   {
     path: "/home",
@@ -25,6 +27,11 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: DashboardView,
+  },
+  {
+    path: "/kiosk/preview",
+    name: "KioskPreview",
+    component: KioskButtonPreview,
   },
   {
     path: "/kiosk/buttons",
@@ -44,28 +51,13 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: HomeView, // 또는 별도의 404 컴포넌트
+    component: HomeView, // 별도의 404 컴포넌트 연결 가능
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    {
-      path: "/",
-      redirect: "/home",
-    },
-    {
-      path: "/home",
-      name: "Home",
-      component: HomeView,
-    },
-    // ... 다른 라우트들
-    {
-      path: "/:pathMatch(.*)*",
-      redirect: "/home",
-    },
-  ],
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
 });
 
 export default router;

@@ -1,20 +1,18 @@
 <template>
-  <div class="kiosk-preview">
-    <div class="preview-container">
-      <h2 class="title">미리보기</h2>
-      <div class="kiosk-display">
-        <div class="image-container">
-          <img src="@/assets/img/imbank_ai.png" alt="ai_img" />
-        </div>
-        <div class="buttons-container">
-          <button
-            v-for="item in visibleItems"
-            :key="item.buttonId"
-            class="preview-button"
-          >
-            {{ item.buttonName }}
-          </button>
-        </div>
+  <div class="preview-container">
+    <h2 class="title">미리보기</h2>
+    <div class="kiosk-display">
+      <div class="image-container">
+        <img src="@/assets/img/imbank_ai.png" alt="ai_img" />
+      </div>
+      <div class="buttons-container">
+        <button
+          v-for="item in visibleItems"
+          :key="item.buttonId"
+          class="preview-button"
+        >
+          {{ item.buttonName }}
+        </button>
       </div>
     </div>
   </div>
@@ -29,17 +27,9 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
 </script>
 
 <style scoped>
-.kiosk-preview {
-  width: 100%;
-  height: 100%;
-  background: white;
-  border-radius: 2rem;
-  box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.1);
-}
-
 .preview-container {
-  width: 100%;
-  height: 100%;
+  width: 80dvh * 9/16;
+  height: 90dvh;
   background: #1a1a2e;
   border-radius: 1rem;
   padding: 1rem;
@@ -57,7 +47,8 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
 
 .kiosk-display {
   position: relative;
-  width: 100%;
+  width: 80dvh * 9/16;
+  height: 80dvh;
   max-width: 100%;
   aspect-ratio: 9/16;
   background: white;
@@ -88,19 +79,22 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
   background: white;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
+  height: 95%;
+  margin: 1rem;
   gap: 0.5rem;
 }
 
 .preview-button {
   flex: 1;
   width: 100%;
-  background-color: #3498db;
+  background-color: #06c7aa;
   color: white;
   border: none;
   border-radius: 0.375rem;
   font-size: clamp(0.75rem, 1.5vw, 1rem);
-  text-align: left;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
   padding: 0.5rem 1rem;
   white-space: pre-wrap;
   cursor: pointer;
@@ -137,7 +131,7 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
   }
 }
 
-@media (max-width: 30rem) {
+@media (max-width: 5rem) {
   .kiosk-preview {
     padding: 0.75rem;
   }

@@ -407,17 +407,17 @@ onMounted(loadGridSize);
 .grid-container {
   position: sticky;
   width: 100%;
-  top: 4rem;
+  top: 3rem;
   padding-bottom: 100%;
   background: white;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
 }
 
 .grid-layout {
   position: absolute;
-  top: 0;
+  top: 10;
   left: 0;
   width: 100%;
   height: 100%;

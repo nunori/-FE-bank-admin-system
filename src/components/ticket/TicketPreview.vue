@@ -37,7 +37,7 @@ const visibleItems = computed(() => {
 <style scoped>
 /* 기존 스타일 추가 */
 .ticket-preview {
-  background: white;
+  background: #1a1a2e;
   border-radius: 2rem;
   padding: 3rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
@@ -54,7 +54,7 @@ const visibleItems = computed(() => {
 
 .title {
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: #ffffff;
   margin-bottom: 20px;
   font-weight: 600;
 }

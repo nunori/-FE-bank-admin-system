@@ -65,7 +65,7 @@ const handleLogin = async () => {
       default:
         console.log("알 수 없는 deptCode:", userData.deptCode);
         alert("권한이 없습니다.");
-        return; // 함수 즉시 종료
+        return; // 함수 즉시 종료kio
     }
   } catch (error) {
     console.error("로그인 오류:", error);
