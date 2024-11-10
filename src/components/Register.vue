@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
+import axiosInstance from "@/axios.js";
 import { useRouter } from "vue-router";
 
 const user = ref({
@@ -61,21 +61,18 @@ const submitForm = async () => {
   try {
     console.log("회원가입 정보: ", user.value);
 
-    const response = await axios.post(
-      "http://localhost:8080/api/users/register",
-      {
-        userNumber: user.value.number,
-        userPassword: user.value.password,
-        userName: user.value.name,
-        deptId: parseInt(user.value.deptId), // String을 Integer로 변환
-        deptCode: user.value.deptCode, // 새로 추가
-        userDvcd: user.value.dvcd,
-      }
-    );
+    const response = await axiosInstance.post("/users/register", {
+      userNumber: user.value.number,
+      userPassword: user.value.password,
+      userName: user.value.name,
+      deptId: parseInt(user.value.deptId), // String을 Integer로 변환
+      deptCode: user.value.deptCode, // 새로 추가
+      userDvcd: user.value.dvcd,
+    });
 
     console.log("서버 응답: ", response.data);
     alert("회원가입 성공");
-    router.push("/");
+    router.push("/home");
   } catch (e) {
     if (e.response?.data?.message === "이 사번은 이미 사용중입니다.") {
       alert("이미 사용 중인 사번입니다.");

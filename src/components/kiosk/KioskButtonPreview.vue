@@ -27,61 +27,95 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
 .kiosk-preview {
   background: white;
   border-radius: 2rem;
-  padding: 3rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  width: 100%; /* 변경: 고정 너비 제거 */
-  margin: 0; /* 변경: margin 제거 */
+  padding: 2rem;
+  box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .preview-container {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 0 auto;
+  background: #f8f9fa;
+  border-radius: 1rem;
+  width: 1200px;
+  height: 2000px;
+  max-width: 100%;
+  max-height: calc(100vh - 8rem);
+  overflow: hidden;
 }
 
 .title {
   font-size: 1.5rem;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
   font-weight: 600;
+  text-align: center;
 }
 
 .buttons-container {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(10px, 1fr)); /* 변경: 반응형 그리드 */
-  gap: 16px;
-  padding: 16px;
+  flex: 1;
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  border: 1px solid black;
+  width: 90%;
+  height: 100%;
 }
 
 .preview-button {
-  padding: 16px;
+  width: 100%;
+  padding: 1rem;
   background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   font-size: 1rem;
+  text-align: left;
+  min-height: 3.75rem;
+  white-space: pre-wrap;
   cursor: pointer;
   transition: all 0.2s;
-  text-align: center;
 }
 
 .preview-button:hover {
   background-color: #2980b9;
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  resize: vertical;
+@media (max-width: 64rem) {
+  .preview-container {
+    width: 80%;
+    height: auto;
+    aspect-ratio: 9/16;
+  }
 }
 
-.preview-button {
-  white-space: pre-wrap;
-  text-align: left;
-  min-height: 60px;
+@media (max-width: 48rem) {
+  .preview-container {
+    width: 70%;
+    height: auto;
+    aspect-ratio: 9/16;
+  }
+}
+
+@media (max-width: 30rem) {
+  .kiosk-preview {
+    padding: 1rem;
+  }
+  .preview-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9/16;
+  }
 }
 </style>
