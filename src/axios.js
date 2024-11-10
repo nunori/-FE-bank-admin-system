@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "@/router";
 
 const axiosInstance = axios.create({
-  baseURL: "https://www.admin-system.shop/api",
+  baseURL: `${import.meta.env.VITE_API_URL}`,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
