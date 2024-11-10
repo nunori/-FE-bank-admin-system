@@ -53,16 +53,22 @@ const handleLogin = async () => {
     // 라우팅
     switch (userData.deptCode) {
       case "01":
-        router.push("/dashboard");
+        await router.push("/dashboard"); // await 추가
         break;
       case "02":
-        router.push("/kiosk/ticket-custom");
+        await router.push("/kiosk/ticket-custom"); // await 추가
         break;
       default:
         alert("권한이 없습니다.");
+        return; // 권한 없을 때 함수 종료
     }
   } catch (error) {
     console.error("로그인 오류:", error);
+    if (error.name === "NavigationFailure") {
+      console.error("라우팅 실패:", error);
+      // 라우팅 실패 시 홈으로 이동
+      await router.push("/home");
+    }
     const errorMessage =
       error.response?.data?.message ||
       "로그인에 실패했습니다. 다시 시도해주세요.";

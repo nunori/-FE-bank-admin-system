@@ -28,18 +28,18 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    if (error.response) {
-      console.error("Response Error:", error.response.data);
-      return Promise.reject(error);
+  async (error) => {
+    if (error.response && error.response.status === 404) {
+      // 404 에러 시 홈으로 리다이렉트
+      router.push("/home");
+      return Promise.reject(new Error("페이지를 찾을 수 없습니다."));
     }
-    if (error.request) {
-      console.error("Request Error:", error.request);
-      return Promise.reject(new Error("서버와의 통신에 실패했습니다."));
+    if (error.response && error.response.status === 401) {
+      // 인증 에러 시 로그인 페이지로
+      router.push("/");
+      return Promise.reject(new Error("인증이 필요합니다."));
     }
-    console.error("Error:", error.message);
     return Promise.reject(error);
   }
 );
-
 export default axiosInstance;

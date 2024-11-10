@@ -49,8 +49,23 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/",
+      redirect: "/home",
+    },
+    {
+      path: "/home",
+      name: "Home",
+      component: HomeView,
+    },
+    // ... 다른 라우트들
+    {
+      path: "/:pathMatch(.*)*",
+      redirect: "/home",
+    },
+  ],
 });
 
 export default router;
