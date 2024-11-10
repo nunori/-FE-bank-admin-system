@@ -53,12 +53,12 @@ const handleLogin = async () => {
     // 라우팅
     switch (userData.deptCode) {
       case "01":
-        console.log("라우팅 시도 - dashboard");
+        console.log("라우팅 시도 01 - dashboard");
         await router.push("/dashboard");
         console.log("dashboard 라우팅 완료");
         break;
       case "02":
-        console.log("라우팅 시도 - ticket-custom");
+        console.log("라우팅 시도 02 - ticket-custom");
         await router.push("/kiosk/ticket-custom");
         console.log("ticket-custom 라우팅 완료");
         break;
