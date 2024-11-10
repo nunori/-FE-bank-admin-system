@@ -2,14 +2,19 @@
   <div class="kiosk-preview">
     <div class="preview-container">
       <h2 class="title">미리보기</h2>
-      <div class="buttons-container">
-        <button
-          v-for="item in visibleItems"
-          :key="item.buttonId"
-          class="preview-button"
-        >
-          {{ item.buttonName }}
-        </button>
+      <div class="kiosk-display">
+        <div class="image-container">
+          <img src="@/assets/img/imbank_ai.png" alt="ai_img" />
+        </div>
+        <div class="buttons-container">
+          <button
+            v-for="item in visibleItems"
+            :key="item.buttonId"
+            class="preview-button"
+          >
+            {{ item.buttonName }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -25,63 +30,78 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
 
 <style scoped>
 .kiosk-preview {
+  width: 100%;
+  height: 100%;
   background: white;
   border-radius: 2rem;
-  padding: 2rem;
   box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.1);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .preview-container {
+  width: 100%;
+  height: 100%;
+  background: #1a1a2e;
+  border-radius: 1rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  margin: 0 auto;
-  background: #f8f9fa;
-  border-radius: 1rem;
-  width: 1200px;
-  height: 2000px;
-  max-width: 100%;
-  max-height: calc(100vh - 8rem);
-  overflow: hidden;
 }
 
 .title {
   font-size: 1.5rem;
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
   font-weight: 600;
-  text-align: center;
+}
+
+.kiosk-display {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 9/16;
+  background: white;
+  border: 1px solid #e1e1e1;
+  border-radius: 0.5rem;
+  display: flex;
+  overflow: hidden;
+}
+
+.image-container {
+  flex: 1;
+  height: 100%;
+  max-width: 50%;
+  overflow: hidden;
+  border-right: 1px solid #e1e1e1;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .buttons-container {
   flex: 1;
-  background: #f8f9fa;
-  border-radius: 0.5rem;
+  height: 100%;
+  max-width: 50%;
+  background: white;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  overflow-y: auto;
-  border: 1px solid black;
-  width: 90%;
-  height: 100%;
+  padding: 0.5rem;
+  gap: 0.5rem;
 }
 
 .preview-button {
+  flex: 1;
   width: 100%;
-  padding: 1rem;
   background-color: #3498db;
   color: white;
   border: none;
   border-radius: 0.375rem;
-  font-size: 1rem;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
   text-align: left;
-  min-height: 3.75rem;
+  padding: 0.5rem 1rem;
   white-space: pre-wrap;
   cursor: pointer;
   transition: all 0.2s;
@@ -93,29 +113,37 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
 }
 
 @media (max-width: 64rem) {
-  .preview-container {
-    width: 80%;
-    height: auto;
-    aspect-ratio: 9/16;
+  .kiosk-preview {
+    max-height: 80vh;
+  }
+
+  .kiosk-display {
+    width: 100%;
+    max-width: none;
   }
 }
 
 @media (max-width: 48rem) {
+  .kiosk-preview {
+    padding: 1rem;
+  }
+
   .preview-container {
-    width: 70%;
-    height: auto;
-    aspect-ratio: 9/16;
+    padding: 0.75rem;
+  }
+
+  .buttons-container {
+    gap: 0.25rem;
   }
 }
 
 @media (max-width: 30rem) {
   .kiosk-preview {
-    padding: 1rem;
+    padding: 0.75rem;
   }
+
   .preview-container {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 9/16;
+    padding: 0.5rem;
   }
 }
 </style>

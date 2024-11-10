@@ -32,13 +32,12 @@ import KioskButtonPreview from "@/components/kiosk/KioskButtonPreview.vue";
 
 .content-left {
   flex: 1;
-  min-width: 18.75rem; /* 300px */
+  min-width: 18.75raem; /* 300px */
   max-width: 28.125rem; /* 450px */
 }
 
 .content-right {
-  flex: 2;
-  min-width: 31.25rem; /* 500px */
+  flex: 1.5;
 }
 
 /* 반응형 처리 */

@@ -282,11 +282,10 @@ onMounted(() => {
 .kiosk-buttons {
   background: white;
   border-radius: 2rem;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
-  width: 100%;
+  width: 80%;
   height: 100%;
-  min-height: 31.25rem; /* 500px */
 }
 
 .title {

@@ -41,6 +41,11 @@ const routes = [
     name: "BranchLayoutCustom",
     component: BranchLayoutView,
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: HomeView, // 또는 별도의 404 컴포넌트
+  },
 ];
 
 const router = createRouter({
