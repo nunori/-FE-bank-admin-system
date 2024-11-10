@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axiosInstance from "@/axios.js";
 
 export const usePreviewStore = defineStore("previewStore", {
   state: () => ({
@@ -73,7 +73,7 @@ export const usePreviewStore = defineStore("previewStore", {
           visible: item.visible,
         }));
 
-        await axios.put("/api/kiosk/ticket-layout/update", payload);
+        await axiosInstance.put("/kiosk/ticket-layout/update", payload);
         // 성공적으로 업데이트된 경우 localStorage 갱신
         localStorage.setItem("previewItems", JSON.stringify(this.items));
       } catch (error) {

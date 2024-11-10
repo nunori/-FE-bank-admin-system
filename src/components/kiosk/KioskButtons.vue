@@ -282,10 +282,11 @@ onMounted(() => {
 .kiosk-buttons {
   background: white;
   border-radius: 2rem;
-  padding: 3rem;
+  padding: 2rem;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
   width: 100%;
-  margin: 0;
+  height: 100%;
+  min-height: 31.25rem; /* 500px */
 }
 
 .title {
@@ -304,28 +305,28 @@ onMounted(() => {
 
 .item {
   background: white;
-  border-radius: 6px;
-  margin-bottom: 8px;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
   transition: all 0.2s ease;
   cursor: move;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 .item-content {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
 }
 
 .checkbox {
-  margin-right: 12px;
-  width: 18px;
-  height: 18px;
+  margin-right: 0.75rem;
+  width: 1.125rem; /* 18px */
+  height: 1.125rem;
   cursor: pointer;
 }
 
@@ -396,10 +397,10 @@ onMounted(() => {
 .modal {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 31.25rem; /* 500px */
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
 }
 
 .modal h3 {
@@ -420,9 +421,9 @@ onMounted(() => {
 
 .form-group input[type="text"] {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.5rem;
+  border: 0.0625rem solid #ddd; /* 1px */
+  border-radius: 0.25rem;
   font-size: 1rem;
 }
 
@@ -454,8 +455,8 @@ onMounted(() => {
 }
 
 .checkbox-group input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 1.125rem; /* 18px */
+  height: 1.125rem;
 }
 
 .item-actions {
@@ -485,7 +486,6 @@ onMounted(() => {
   font-size: 1.2rem;
   font-weight: bold;
 }
-
 .delete-confirm-button {
   padding: 8px 16px;
   background-color: #e74c3c;
@@ -504,5 +504,42 @@ onMounted(() => {
 .modal p {
   margin-bottom: 1rem;
   color: #2c3e50;
+}
+
+@media (max-width: 64rem) {
+  /* 1024px */
+  .kiosk-buttons {
+    min-height: auto;
+  }
+
+  .modal {
+    width: 95%;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  /* 768px */
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .title {
+    margin-bottom: 1rem;
+  }
+}
+
+/* 작은 모바일 화면 대응 */
+@media (max-width: 30rem) {
+  /* 480px */
+  .kiosk-buttons {
+    padding: 1.5rem;
+  }
+
+  .item-content {
+    padding: 0.5rem;
+  }
 }
 </style>

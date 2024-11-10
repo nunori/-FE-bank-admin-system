@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axiosInstance from "@/axios.js";
 
 export const useKioskButtonStore = defineStore("kioskButton", {
   state: () => ({
@@ -63,7 +63,7 @@ export const useKioskButtonStore = defineStore("kioskButton", {
           visible: item.visible,
         }));
 
-        await axios.put("/api/kiosk/buttons/update", payload);
+        await axiosInstance.put("/kiosk/buttons/update", payload);
         // 성공적으로 업데이트된 경우 localStorage 갱신
         localStorage.setItem("kioskButtons", JSON.stringify(this.items));
       } catch (error) {
