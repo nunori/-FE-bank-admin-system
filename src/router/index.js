@@ -10,7 +10,7 @@ import BranchLayoutView from "@/views/BranchLayoutView.vue";
 const routes = [
   {
     path: "/",
-    name: "HomrRedirect",
+    name: "HomeRedirect",
     component: HomeView,
   },
   {
