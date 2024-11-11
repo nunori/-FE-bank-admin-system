@@ -163,7 +163,7 @@ const fetchElements = async () => {
 
 .layout-container {
   width: 90%;
-  max-width: 1200px;
+  max-width: 50dvw;
 }
 
 h2 {
