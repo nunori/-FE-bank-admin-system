@@ -3,7 +3,13 @@ import Register from "@/components/Register.vue";
 </script>
 
 <template>
-  <Register />
+  <div class="register-container">
+    <Register />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.register-container {
+  padding-top: 5rem;
+}
+</style>

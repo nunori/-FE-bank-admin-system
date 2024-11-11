@@ -1,5 +1,10 @@
 <template>
   <div class="floor-controls">
+    <!-- 창구 개수 표시 -->
+    <div class="counter-summary">
+      <h3>창구 개수: {{ counterCount }}</h3>
+    </div>
+
     <div class="floor-buttons">
       <button
         v-for="floor in sortedFloors"
@@ -116,13 +121,25 @@ const newFloor = ref({
   floorNumber: null,
   floorName: "",
 });
+const counterCount = ref(0); // 창구 개수 상태
 
-// 정렬된 층 목록을 computed 속성으로 정의
 const sortedFloors = computed(() => {
   return [...floors.value].sort((a, b) => a.floorNumber - b.floorNumber);
 });
 
 const emit = defineEmits(["floor-selected"]);
+
+const fetchCounterCount = async (deptId, floorNumber) => {
+  try {
+    const response = await axiosInstance.post(`/branch-layout/window-count`, {
+      deptId: deptId,
+      floorNumber: floorNumber, // ensure that 'floorNumber' matches backend parameter
+    });
+    counterCount.value = response.data; // Adjust based on the backend's response format
+  } catch (error) {
+    console.error("창구 개수를 가져오는 중 오류 발생:", error);
+  }
+};
 
 // 층 목록 조회
 const fetchFloors = async () => {
@@ -139,14 +156,14 @@ const fetchFloors = async () => {
   }
 };
 
-// 층 선택 - null 체크 추가
+// 층 선택
 const selectFloor = (floor) => {
   if (!floor || typeof floor.floorId === "undefined") {
     console.error("유효하지 않은 층 정보입니다:", floor);
     return;
   }
-
   selectedFloor.value = floor.floorNumber;
+  fetchCounterCount(userStore.userDeptId, floor.floorNumber); // 창구 개수 요청
   emit("floor-selected", {
     deptId: userStore.userDeptId,
     floorId: floor.floorId,
@@ -155,7 +172,7 @@ const selectFloor = (floor) => {
   });
 };
 
-// 3점 아이콘 클릭 시 메뉴 토글 - null 체크 추가
+// 3점 아이콘 클릭 시 메뉴 토글
 const toggleMenu = (floorId) => {
   if (!floorId) return;
   openMenuId.value = openMenuId.value === floorId ? null : floorId;
@@ -179,90 +196,7 @@ const closeModal = () => {
   };
 };
 
-// 층 수정 모달 열기 - 보강된 유효성 검사
-const openEditFloorModal = (floor) => {
-  if (!floor || !floor.floorId) {
-    console.error("유효하지 않은 층 정보입니다:", floor);
-    return;
-  }
-  isEditing.value = true;
-  newFloor.value = { ...floor };
-  showModal.value = true;
-  openMenuId.value = null;
-};
-
-// 층 생성 - 에러 처리 보강
-const createFloor = async () => {
-  try {
-    if (!newFloor.value.floorNumber) {
-      alert("층 번호를 입력해주세요.");
-      return;
-    }
-
-    const payload = {
-      deptId: userStore.userDeptId,
-      floorNumber: newFloor.value.floorNumber,
-      floorName: newFloor.value.floorName,
-    };
-
-    await axiosInstance.post("/branch-layout/floors/create", payload);
-    await fetchFloors();
-    closeModal();
-    alert("층이 생성되었습니다.");
-  } catch (error) {
-    if (error.response?.data) {
-      alert(error.response.data);
-    } else {
-      alert("층 생성에 실패했습니다.");
-    }
-    console.error("층 생성 실패:", error);
-  }
-};
-
-// 층 수정 - 에러 처리 보강
-const updateFloor = async () => {
-  try {
-    if (!newFloor.value.floorId || !newFloor.value.floorNumber) {
-      alert("필수 정보가 누락되었습니다.");
-      return;
-    }
-
-    const payload = {
-      floorId: newFloor.value.floorId,
-      floorNumber: newFloor.value.floorNumber,
-      floorName: newFloor.value.floorName,
-    };
-
-    await axiosInstance.put("/branch-layout/floors/update", payload);
-    await fetchFloors();
-    closeModal();
-    alert("층 정보가 수정되었습니다.");
-  } catch (error) {
-    alert("층 수정에 실패했습니다.");
-    console.error("층 수정 실패:", error);
-  }
-};
-
-// 층 삭제 - 에러 처리 보강
-const deleteFloor = async (floorId) => {
-  if (!floorId) {
-    console.error("유효하지 않은 층 ID입니다.");
-    return;
-  }
-
-  if (!confirm("정말 삭제하시겠습니까?")) return;
-
-  try {
-    await axiosInstance.delete(`/branch-layout/floors/${floorId}`);
-    await fetchFloors();
-    openMenuId.value = null;
-    alert("층이 삭제되었습니다.");
-  } catch (error) {
-    alert("층 삭제에 실패했습니다.");
-    console.error("층 삭제 실패:", error);
-  }
-};
-
+// 초기 데이터 가져오기
 onMounted(() => {
   fetchFloors();
 });

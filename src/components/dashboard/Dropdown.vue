@@ -4,30 +4,44 @@
     <select
       id="branch-select"
       v-model="selectedBranch"
-      @change="handleSelection"
+      @change="emitBranchChange"
     >
-      <option v-for="branch in branches" :key="branch.id" :value="branch.id">
-        {{ branch.name }}
+      <option
+        v-for="branch in branches"
+        :key="branch.dept_id"
+        :value="branch.dept_id"
+      >
+        {{ branch.dept_name }}
       </option>
     </select>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axiosInstance from "@/axios.js"; // axios 인스턴스 가져오기
 
-const branches = [
-  { id: "01", name: "서울 지점" },
-  { id: "02", name: "부산 지점" },
-  { id: "03", name: "대구 지점" },
-];
+const branches = ref([]); // 초기 branches 빈 배열
+const selectedBranch = ref(null);
+const emit = defineEmits(["branch-change"]);
 
-const selectedBranch = ref(branches[0].id); // 기본값 설정
+function emitBranchChange() {
+  emit("branch-change", selectedBranch.value);
+}
+// 컴포넌트가 로드될 때 branches 데이터 가져오기
+onMounted(async () => {
+  try {
+    const response = await axiosInstance.get("/dashboard/branches");
+    branches.value = response.data; // dept_id와 dept_name 필드가 포함된 데이터
+    selectedBranch.value = branches.value[0]?.dept_id; // 첫 번째 지점을 기본 선택값으로 설정
+  } catch (error) {
+    console.error("지점 데이터를 가져오는 중 오류 발생:", error);
+  }
+});
 
 function handleSelection() {
-  // 선택된 지점의 ID를 콘솔에 출력 (나중에 이걸로 데이터를 가져올 수 있음)
   console.log(`Selected Branch ID: ${selectedBranch.value}`);
-  // API 요청이나 데이터를 업데이트하는 로직을 추가하면 됨
+  // 추가 API 요청이나 데이터 업데이트 로직 추가 가능
 }
 </script>
 

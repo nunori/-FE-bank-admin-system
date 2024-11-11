@@ -1,92 +1,6 @@
-<script setup>
-import { ref } from "vue";
-import axiosInstance from "@/axios.js";
-import { useRouter } from "vue-router";
-
-const user = ref({
-  number: "",
-  password: "",
-  name: "",
-  deptId: "", // department -> deptId로 이름 변경
-  deptCode: "", // 새로 추가
-  dvcd: "",
-});
-
-const errors = ref({
-  number: "",
-  password: "",
-  deptCode: "", // 새로 추가
-});
-
-const router = useRouter();
-
-const validateNumber = () => {
-  if (user.value.number.length !== 7) {
-    errors.value.number = "사번은 7자리입니다.";
-    return false;
-  }
-  errors.value.number = "";
-  return true;
-};
-
-const validatePassword = () => {
-  if (user.value.password.length < 8) {
-    errors.value.password = "비밀번호는 8자리 이상이어야 합니다.";
-    return false;
-  }
-  errors.value.password = "";
-  return true;
-};
-
-const validateDeptCode = () => {
-  if (!["01", "02"].includes(user.value.deptCode)) {
-    errors.value.deptCode =
-      "부서 코드는 01(본부) 또는 02(영업점)이어야 합니다.";
-    return false;
-  }
-  errors.value.deptCode = "";
-  return true;
-};
-
-const submitForm = async () => {
-  // 모든 검증 실행
-  const isNumberValid = validateNumber();
-  const isPasswordValid = validatePassword();
-  const isDeptCodeValid = validateDeptCode();
-
-  if (!isNumberValid || !isPasswordValid || !isDeptCodeValid) {
-    return;
-  }
-
-  try {
-    console.log("회원가입 정보: ", user.value);
-
-    const response = await axiosInstance.post("/users/register", {
-      userNumber: user.value.number,
-      userPassword: user.value.password,
-      userName: user.value.name,
-      deptId: parseInt(user.value.deptId), // String을 Integer로 변환
-      deptCode: user.value.deptCode, // 새로 추가
-      userDvcd: user.value.dvcd,
-    });
-
-    console.log("서버 응답: ", response.data);
-    alert("회원가입 성공");
-    router.push("/home");
-  } catch (e) {
-    if (e.response?.data?.message === "이 사번은 이미 사용중입니다.") {
-      alert("이미 사용 중인 사번입니다.");
-    } else {
-      console.error("회원가입 오류: ", e);
-      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
-    }
-  }
-};
-</script>
-
 <template>
   <div class="register">
-    <h2>회원가입</h2>
+    <h2>IM뱅크 관리자 회원가입</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label for="user-number">사번</label>
@@ -173,15 +87,109 @@ const submitForm = async () => {
   </div>
 </template>
 
+<script setup>
+import { ref } from "vue";
+import axiosInstance from "@/axios.js";
+import { useRouter } from "vue-router";
+
+const user = ref({
+  number: "",
+  password: "",
+  name: "",
+  deptId: "", // department -> deptId로 이름 변경
+  deptCode: "", // 새로 추가
+  dvcd: "",
+});
+
+const errors = ref({
+  number: "",
+  password: "",
+  deptCode: "", // 새로 추가
+});
+
+const router = useRouter();
+
+const validateNumber = () => {
+  if (user.value.number.length !== 7) {
+    errors.value.number = "사번은 7자리입니다.";
+    return false;
+  }
+  errors.value.number = "";
+  return true;
+};
+
+const validatePassword = () => {
+  if (user.value.password.length < 8) {
+    errors.value.password = "비밀번호는 8자리 이상이어야 합니다.";
+    return false;
+  }
+  errors.value.password = "";
+  return true;
+};
+
+const validateDeptCode = () => {
+  if (!["01", "02"].includes(user.value.deptCode)) {
+    errors.value.deptCode =
+      "부서 코드는 01(본부) 또는 02(영업점)이어야 합니다.";
+    return false;
+  }
+  errors.value.deptCode = "";
+  return true;
+};
+
+const submitForm = async () => {
+  // 모든 검증 실행
+  const isNumberValid = validateNumber();
+  const isPasswordValid = validatePassword();
+  const isDeptCodeValid = validateDeptCode();
+
+  if (!isNumberValid || !isPasswordValid || !isDeptCodeValid) {
+    return;
+  }
+
+  try {
+    console.log("회원가입 정보: ", user.value);
+
+    const response = await axiosInstance.post("/users/register", {
+      userNumber: user.value.number,
+      userPassword: user.value.password,
+      userName: user.value.name,
+      deptId: parseInt(user.value.deptId), // String을 Integer로 변환
+      deptCode: user.value.deptCode, // 새로 추가
+      userDvcd: user.value.dvcd,
+    });
+
+    console.log("서버 응답: ", response.data);
+    alert("회원가입 성공");
+    router.push("/home");
+  } catch (e) {
+    if (e.response?.data?.message === "이 사번은 이미 사용중입니다.") {
+      alert("이미 사용 중인 사번입니다.");
+    } else {
+      console.error("회원가입 오류: ", e);
+      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+    }
+  }
+};
+</script>
+
 <style scoped>
 .register {
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬을 위해 추가 */
+}
+
+form {
+  width: 400px; /* 폼 전체 너비 고정 */
 }
 
 .form-group {
   margin-bottom: 15px;
+  width: 100%; /* form의 너비에 맞춤 */
 }
 
 label {
@@ -192,7 +200,7 @@ label {
 
 input,
 select {
-  width: 100%;
+  width: 100%; /* form-group의 너비에 맞춤 */
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -200,13 +208,13 @@ select {
 }
 
 button {
-  background-color: #4caf50;
+  background-color: #08c7aa;
   color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%;
+  width: 100%; /* form-group의 너비에 맞춤 */
 }
 
 button:hover {

@@ -4,17 +4,39 @@ import Login from "@/components/Login.vue";
 
 <template>
   <div class="home">
-    <h1>환영합니다!</h1>
-    <p>이곳은 고객 관리 키오스크 관리자 시스템입니다.</p>
-    <Login />
-    <router-link to="/register">회원가입 페이지로 이동</router-link>
+    <img src="@/assets/img/imbank_logo_2.jpg" alt="login_page_img" />
+    <div class="login-right">
+      <h1>환영합니다!</h1>
+      <p>이곳은 고객 관리 키오스크 관리자 시스템입니다.</p>
+      <Login />
+      <router-link to="/register">회원가입 페이지로 이동</router-link>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .home {
-  text-align: center;
   padding: 20px;
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+  min-height: 100dvh;
+  align-items: center;
+  gap: 2rem;
+}
+
+.home img {
+  max-height: 30dvh;
+  width: 50%; /* 이미지 영역이 전체의 50% 차지 */
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%; /* login-right 영역이 전체의 50% 차지 */
 }
 
 h1 {
@@ -25,5 +47,16 @@ h1 {
 p {
   color: #666;
   font-size: 16px;
+}
+
+@media screen and (max-width: 60%) {
+  .home {
+    flex-direction: column;
+  }
+
+  .home img,
+  .login-right {
+    width: 100%; /* 작은 화면에서는 둘 다 전체 너비 사용 */
+  }
 }
 </style>

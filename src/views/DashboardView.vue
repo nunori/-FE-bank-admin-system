@@ -1,5 +1,4 @@
 <script setup>
-import Sidebar from "@/components/Sidebar.vue";
 import Dropdown from "@/components/dashboard/Dropdown.vue";
 import DashboardSummary from "@/components/dashboard/DashboardSummary.vue";
 import CustomerChart from "@/components/dashboard/CustomerChart.vue";
@@ -7,63 +6,135 @@ import WaitTimeChart from "@/components/dashboard/WaitTimeChart.vue";
 import TimeBasedCustomerChart from "@/components/dashboard/TimeBasedCustomerChart.vue";
 import DatePickerModal from "@/components/dashboard/DatePickerModal.vue";
 import axiosInstance from "@/axios.js";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-const summaryData = [
-  { title: "내점 고객 수", value: "1,200명" },
-  { title: "대기 시간 평균", value: "15분" },
-];
-
-function onBranchChange(selectedBranch) {
-  console.log("Selected branch: ", selectedBranch);
-}
-
+// 상태 관리 - 기본 값 설정
+const summaryData = ref([]);
+const chartData = ref([]);
+const waitTimeData = ref([]);
+const selectedBranch = ref(1); // 기본 deptId = 1
 const showModal = ref(false);
+const dateRange = ref({
+  startDate: "2024-11-01", // 기본 시작 날짜
+  endDate: "2024-11-11", // 기본 종료 날짜
+});
 
-const fetchData = async ({ startDate, endDate }) => {
+// summaryData를 동적으로 가져오기 위한 함수
+const fetchSummaryData = async () => {
+  if (
+    !selectedBranch.value ||
+    !dateRange.value.startDate ||
+    !dateRange.value.endDate
+  )
+    return;
+
   try {
-    const response = await axiosInstance.post(`/dashboard/customers/count`, {
-      deptId: "02",
-      period: "day",
-      startDate: startDate,
-      endDate: endDate,
+    const response = await axiosInstance.post("/dashboard/summary", {
+      deptId: selectedBranch.value,
+      startDate: dateRange.value.startDate,
+      endDate: dateRange.value.endDate,
     });
-    console.log("선택한 날짜:", { startDate, endDate });
-    console.log("날짜 response: ", response.data);
+    summaryData.value = response.data;
   } catch (error) {
-    console.error("날짜선택 오류: ", error);
+    console.error("요약 데이터를 가져오는 중 오류 발생:", error);
   }
 };
 
-const onDateSelected = (dates) => {
-  fetchData(dates);
+// CustomerChart 및 WaitTimeChart 데이터를 가져오기 위한 함수
+const fetchChartData = async () => {
+  if (
+    !selectedBranch.value ||
+    !dateRange.value.startDate ||
+    !dateRange.value.endDate
+  )
+    return;
+
+  try {
+    const response = await axiosInstance.post("/dashboard/customers/data", {
+      deptId: selectedBranch.value,
+      startDate: dateRange.value.startDate,
+      endDate: dateRange.value.endDate,
+    });
+    chartData.value = response.data;
+  } catch (error) {
+    console.error("고객 차트 데이터를 가져오는 중 오류 발생:", error);
+  }
 };
+
+// 대기 시간 차트 데이터 가져오기 함수
+const fetchWaitTimeData = async () => {
+  if (
+    !selectedBranch.value ||
+    !dateRange.value.startDate ||
+    !dateRange.value.endDate
+  )
+    return;
+
+  try {
+    const response = await axiosInstance.post(
+      "/dashboard/customers/wait-time/avg",
+      {
+        deptId: selectedBranch.value,
+        startDate: dateRange.value.startDate,
+        endDate: dateRange.value.endDate,
+      }
+    );
+    waitTimeData.value = response.data;
+  } catch (error) {
+    console.error("대기 시간 데이터를 가져오는 중 오류 발생:", error);
+  }
+};
+
+// 지점 선택 시 이벤트
+function onBranchChange(branchId) {
+  selectedBranch.value = branchId;
+  console.log("선택된 지점 ID:", selectedBranch.value);
+}
+
+// 날짜 선택 시 이벤트
+function onDateSelected(dates) {
+  dateRange.value = dates;
+}
+
+// 선택된 지점이나 날짜가 변경될 때마다 데이터를 다시 가져와 차트와 요약 데이터를 새로고침
+watch([selectedBranch, dateRange], () => {
+  fetchSummaryData();
+  fetchChartData();
+  fetchWaitTimeData();
+});
 </script>
 
 <template>
   <div class="dashboard-container">
     <div class="info-container">
+      <!-- 지점 선택 드롭다운 -->
       <div class="dropdown-container">
-        <Dropdown @change="onBranchChange" />
+        <Dropdown @branch-change="onBranchChange" />
       </div>
+
+      <!-- 날짜 선택 모달 -->
       <div class="date-picker-container">
-        <button @click="showModal = true">달력 아이콘</button>
+        <button @click="showModal = true">날짜 선택</button>
         <DatePickerModal
           v-if="showModal"
           :showModal="showModal"
           @close="showModal = false"
-          :onDateSelected="onDateSelected"
+          @dateSelected="onDateSelected"
         />
       </div>
+
+      <!-- 대시보드 요약 -->
       <div class="grid-layout">
         <div class="grid-item">
           <DashboardSummary :summaryData="summaryData" />
         </div>
+
+        <!-- 차트 컴포넌트들 -->
         <div class="grid-item">
-          <CustomerChart />
+          <CustomerChart :chartData="chartData" />
         </div>
         <div class="grid-item">
-          <WaitTimeChart />
+          <WaitTimeChart :waitTimeData="waitTimeData" />
         </div>
         <div class="grid-item">
           <TimeBasedCustomerChart />

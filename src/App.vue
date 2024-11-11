@@ -9,7 +9,8 @@ const showSidebar = ref(route.path !== "/home" && route.path !== "/");
 watch(
   () => route.path,
   (newPath) => {
-    showSidebar.value = newPath !== "/home" && newPath !== "/";
+    showSidebar.value =
+      newPath !== "/home" && newPath !== "/" && newPath !== "/register";
   }
 );
 </script>
