@@ -16,10 +16,18 @@ const handleLogin = async () => {
   }
 
   try {
-    const response = await axiosInstance.post(`/auth/login`, {
-      userNumber: userid.value.trim(),
-      userPassword: password.value.trim(),
-    });
+    const response = await axiosInstance.post(
+      `/auth/login`,
+      {
+        userNumber: userid.value.trim(),
+        userPassword: password.value.trim(),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const userData = response.data;
     console.log("전체응답: ", response.data);
