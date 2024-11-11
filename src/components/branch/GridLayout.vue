@@ -459,7 +459,8 @@ onMounted(loadGridSize);
 
 .grid-container {
   position: sticky;
-  width: 100%;
+  width: 80%;
+
   top: 5rem;
   padding-bottom: 100%;
   background: white;

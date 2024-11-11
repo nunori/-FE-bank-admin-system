@@ -12,6 +12,11 @@ const props = defineProps({
 const percentageClass = computed(() => {
   return props.percentage.startsWith("-") ? "negative" : "positive";
 });
+
+// value가 null일 때 0으로 표시
+const displayValue = computed(() => {
+  return props.value ?? "0";
+});
 </script>
 
 <template>
@@ -21,7 +26,7 @@ const percentageClass = computed(() => {
       <p class="info">{{ info }}</p>
     </div>
     <div class="card-body">
-      <p class="value">{{ value }}</p>
+      <p class="value">{{ displayValue }}</p>
       <p class="percentage" :class="percentageClass">{{ percentage }}</p>
     </div>
   </div>

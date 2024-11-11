@@ -1,52 +1,49 @@
 <template>
   <div class="chart-container">
-    <canvas id="customer-chart"></canvas>
+    <canvas ref="customerChartCanvas"></canvas>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import Chart from "chart.js/auto";
-import axiosInstance from "@/axios.js";
 
-const chartData = ref([]); // API로부터 데이터를 저장할 변수
+const props = defineProps({
+  chartData: Array, // 데이터 배열
+  labels: Array, // 레이블 배열
+});
 
-// API에서 데이터를 가져오는 함수
-const fetchChartData = async () => {
-  try {
-    const response = await axiosInstance.post("/dashboard/customers/data", {
-      deptId: "02", // 선택한 지점 ID로 교체
-      startDate: "2024-11-01", // 시작 날짜로 교체
-      endDate: "2024-11-07", // 종료 날짜로 교체
-    });
-    chartData.value = response.data; // API로부터 받은 데이터를 저장
-  } catch (error) {
-    console.error("차트 데이터를 가져오는 중 오류 발생:", error);
-  }
-};
+const chartInstance = ref(0);
+const customerChartCanvas = ref(0);
 
-onMounted(async () => {
-  await fetchChartData(); // 데이터 가져오기
+onMounted(() => {
+  renderChart();
+});
 
-  const ctx = document.getElementById("customer-chart").getContext("2d");
+watch(
+  () => [props.chartData, props.labels],
+  () => {
+    if (chartInstance.value) {
+      chartInstance.value.destroy();
+    }
+    renderChart();
+  },
+  { immediate: true }
+);
 
-  // 가져온 데이터를 기반으로 차트를 생성
-  new Chart(ctx, {
+function renderChart() {
+  if (!customerChartCanvas.value) return;
+
+  const ctx = customerChartCanvas.value.getContext("2d");
+
+  chartInstance.value = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: chartData.value.labels || [
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-        "Sun",
-      ], // 예비 레이블
+      labels: props.labels,
       datasets: [
         {
           label: "내점 고객 수",
-          data: chartData.value.data || [0, 0, 0, 0, 0, 0, 0], // API에서 가져온 데이터
+          data: props.chartData,
           backgroundColor: "#4caf50",
         },
       ],
@@ -54,9 +51,14 @@ onMounted(async () => {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
     },
   });
-});
+}
 </script>
 
 <style scoped>

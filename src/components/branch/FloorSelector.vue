@@ -127,6 +127,16 @@ const sortedFloors = computed(() => {
   return [...floors.value].sort((a, b) => a.floorNumber - b.floorNumber);
 });
 
+const openEditFloorModal = (floor) => {
+  isEditing.value = true;
+  newFloor.value = {
+    floorNumber: floor.floorNumber,
+    floorName: floor.floorName || "",
+  };
+  showModal.value = true;
+  openMenuId.value = null; // 메뉴 닫기
+};
+
 const emit = defineEmits(["floor-selected"]);
 
 const fetchCounterCount = async (deptId, floorNumber) => {
@@ -185,6 +195,59 @@ const openAddFloorModal = () => {
     floorName: "",
   };
   showModal.value = true;
+};
+
+const updateFloor = async () => {
+  try {
+    const response = await axiosInstance.put("/branch-layout/floors/update", {
+      deptId: userStore.userDeptId,
+      floorNumber: newFloor.value.floorNumber,
+      floorName: newFloor.value.floorName,
+    });
+
+    // 성공적으로 수정되면 목록 새로고침
+    await fetchFloors();
+    closeModal();
+  } catch (error) {
+    console.error("층 수정 실패:", error);
+    // 에러 처리 로직 추가 (예: alert 등)
+  }
+};
+const createFloor = async () => {
+  try {
+    const response = await axiosInstance.post("/branch-layout/floors/create", {
+      deptId: userStore.userDeptId,
+      floorNumber: newFloor.value.floorNumber,
+      floorName: newFloor.value.floorName,
+    });
+
+    await fetchFloors();
+    closeModal();
+  } catch (error) {
+    console.error("층 생성 실패:", error);
+    // 에러 처리 로직 추가 (예: alert 등)
+  }
+}; // 닫는 중괄호 추가
+// 층 삭제
+const deleteFloor = async (floorId) => {
+  if (!confirm("정말로 이 층을 삭제하시겠습니까?")) return;
+
+  try {
+    await axiosInstance.delete("/branch-layout/floors/delete", {
+      params: {
+        deptId: userStore.userDeptId,
+        floorNumber: floors.value.find((f) => f.floorId === floorId)
+          ?.floorNumber,
+      },
+    });
+
+    // 삭제 후 목록 새로고침
+    await fetchFloors();
+    openMenuId.value = null; // 메뉴 닫기
+  } catch (error) {
+    console.error("층 삭제 실패:", error);
+    // 에러 처리 로직 추가 (예: alert 등)
+  }
 };
 
 const closeModal = () => {

@@ -1,97 +1,93 @@
 <template>
   <div class="chart-container">
-    <canvas id="wait-time-chart"></canvas>
+    <div
+      v-if="!props.waitTimeData || props.waitTimeData.length === 0"
+      class="no-data-message"
+    >
+      데이터가 없습니다.
+    </div>
+    <canvas v-else ref="chartCanvas"></canvas>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import axiosInstance from "@/axios.js";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import Chart from "chart.js/auto";
-import { useUserStore } from "@/stores/userStore";
 
-const waitTimeData = ref([]);
-const userStore = useUserStore();
+const props = defineProps({
+  waitTimeData: {
+    type: Array,
+    required: true,
+    default: () => [],
+    validator: (value) => {
+      console.log("Validating waitTimeData:", value);
+      return (
+        Array.isArray(value) &&
+        value.every(
+          (item) =>
+            item.hasOwnProperty("period") && item.hasOwnProperty("avgWaitTime")
+        )
+      );
+    },
+  },
+  period: {
+    type: String,
+    required: true,
+    validator: (value) => {
+      console.log("Validating period:", value);
+      return ["custom", "day", "month", "year"].includes(value.toLowerCase());
+    },
+  },
+});
 
-const isTokenAvailable = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  return accessToken !== null && accessToken !== "";
-};
+const chartCanvas = ref(null);
+let chart = null;
 
-const formatDate = (date) => {
-  return date.toISOString().split("T")[0];
-};
+// Props 변화 감지를 위한 watch
+watch(
+  () => props.waitTimeData,
+  (newData) => {
+    console.log("waitTimeData changed:", newData);
+  },
+  { immediate: true, deep: true }
+);
 
-const fetchWaitTimeData = async () => {
-  if (!isTokenAvailable()) {
-    console.error("Access token이 없습니다. 로그인 상태를 확인하세요.");
-    return;
-  }
+watch(
+  () => props.period,
+  (newPeriod) => {
+    console.log("period changed:", newPeriod);
+  },
+  { immediate: true }
+);
 
-  try {
-    const today = new Date();
-    // getUserDeptId() 대신 userDeptId 속성 직접 접근
-    const deptId = userStore.userDeptId;
-
-    // localStorage에서도 확인
-    if (!deptId) {
-      const storedDeptId = localStorage.getItem("userDeptId");
-      if (storedDeptId) {
-        deptId = storedDeptId;
-      }
+const getChartConfig = () => {
+  console.log("Generating chart config with data:", props.waitTimeData);
+  const getLabels = () => {
+    switch (props.period.toUpperCase()) {
+      case "DAY":
+        return props.waitTimeData.map((d) => d.period);
+      case "MONTH":
+        return props.waitTimeData.map((d) => `${parseInt(d.period)}월`);
+      case "YEAR":
+        return props.waitTimeData.map((d) => d.period);
+      default:
+        return props.waitTimeData.map((d) => d.period);
     }
+  };
 
-    if (!deptId) {
-      console.error("부서 ID를 찾을 수 없습니다.");
-      return;
-    }
+  const labels = getLabels();
+  const data = props.waitTimeData.map((d) => d.avgWaitTime);
+  console.log("Chart labels:", labels);
+  console.log("Chart data:", data);
 
-    const requestData = {
-      deptId: deptId, // 이미 서버에서 파싱하므로 parseInt 제거
-      period: "day",
-      date: formatDate(today),
-    };
-
-    console.log("요청 데이터:", requestData);
-
-    const response = await axiosInstance.post(
-      `/dashboard/customers/wait-time/avg`,
-      requestData
-    );
-
-    console.log("대기 시간 평균 데이터: ", response.data);
-    waitTimeData.value = response.data;
-  } catch (error) {
-    console.error("대기시간 평균 데이터 가져오기 오류: ", error);
-    if (error.response) {
-      console.error("에러 응답:", error.response.data);
-      console.error("상태 코드:", error.response.status);
-    }
-  }
-};
-
-onMounted(async () => {
-  await fetchWaitTimeData();
-
-  const ctx = document.getElementById("wait-time-chart")?.getContext("2d");
-  if (!ctx) {
-    console.error("Canvas context를 가져올 수 없습니다.");
-    return;
-  }
-
-  const labels = Array.from({ length: 10 }, (_, i) => `${i + 9}:00`);
-  const dataPoints = Array.from({ length: 10 }, (_, i) => {
-    return waitTimeData.value[i] || 0;
-  });
-
-  new Chart(ctx, {
+  return {
     type: "line",
     data: {
       labels: labels,
       datasets: [
         {
-          label: "대기 시간 평균 (분)",
-          data: dataPoints,
+          label: "평균 대기 시간 (분)",
+          data: data,
           borderColor: "#f44336",
           fill: false,
           tension: 0.4,
@@ -108,12 +104,22 @@ onMounted(async () => {
             color: "#fff",
           },
         },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `${context.raw.toFixed(1)}분`;
+            },
+          },
+        },
       },
       scales: {
         y: {
           beginAtZero: true,
           ticks: {
             color: "#fff",
+            callback: function (value) {
+              return value + "분";
+            },
           },
           grid: {
             color: "rgba(255, 255, 255, 0.1)",
@@ -129,7 +135,58 @@ onMounted(async () => {
         },
       },
     },
-  });
+  };
+};
+
+const updateChart = () => {
+  console.log("Updating chart...");
+  console.log("Canvas element:", chartCanvas.value);
+
+  if (chart) {
+    console.log("Destroying old chart");
+    chart.destroy();
+  }
+
+  if (!chartCanvas.value) {
+    console.error("Canvas reference를 찾을 수 없습니다.");
+    return;
+  }
+
+  const ctx = chartCanvas.value.getContext("2d");
+  const config = getChartConfig();
+  console.log("Chart configuration:", config);
+
+  chart = new Chart(ctx, config);
+  console.log("New chart created");
+};
+
+// waitTimeData나 period가 변경될 때 차트 업데이트
+watch(
+  [() => props.waitTimeData, () => props.period],
+  ([newData, newPeriod]) => {
+    console.log("Watch triggered - Data:", newData, "Period:", newPeriod);
+    if (newData && newData.length > 0) {
+      updateChart();
+    }
+  },
+  { deep: true }
+);
+
+onMounted(() => {
+  console.log("Component mounted");
+  console.log("Initial waitTimeData:", props.waitTimeData);
+  console.log("Initial period:", props.period);
+  console.log("chartCanvas:", chartCanvas.value);
+
+  if (props.waitTimeData && props.waitTimeData.length > 0) {
+    updateChart();
+  }
+});
+
+onBeforeUnmount(() => {
+  if (chart) {
+    chart.destroy();
+  }
 });
 </script>
 
@@ -139,6 +196,13 @@ onMounted(async () => {
   background-color: #1f1f36;
   padding: 20px;
   border-radius: 10px;
-  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-data-message {
+  color: #fff;
+  font-size: 1.2rem;
 }
 </style>

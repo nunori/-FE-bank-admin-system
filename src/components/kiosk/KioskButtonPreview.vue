@@ -106,7 +106,7 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
   transform: translateY(-0.125rem);
 }
 
-@media (max-width: 64rem) {
+/* @media (max-width: 64rem) {
   .kiosk-preview {
     max-height: 80vh;
   }
@@ -115,7 +115,7 @@ const visibleItems = computed(() => kioskButtonStore.visibleItems);
     width: 100%;
     max-width: none;
   }
-}
+} */
 
 @media (max-width: 48rem) {
   .kiosk-preview {
